@@ -27,12 +27,15 @@ type Configs struct {
 }
 
 // Config is the loaded config. This is available after Before()
-var Config *Configs
+var Config = &Configs{}
+
+// for testing
+var userCurrent = user.Current
 
 func configFilename() (string, error) {
-	user, err := user.Current()
+	user, err := userCurrent()
 	if err != nil {
-		return "", xerrors.New("not found the current user")
+		return "", xerrors.Errorf(": %w", err)
 	}
 	return path.Join(user.HomeDir, filename), nil
 }
