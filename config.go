@@ -11,7 +11,7 @@ import (
 
 const filename = ".config/go-prohibited-words-checker/config.toml"
 
-// Config is a struct of the config. Subject has the mail subject template
+// Configs is a struct of the config. Subject has the mail subject template
 // that has %s as the placeholder. Ignores has regexp's to ignore files to
 // search.
 type Configs struct {
