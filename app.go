@@ -12,7 +12,11 @@ func NewApp() *cli.App {
 		},
 		Before: LoadConfig,
 		Flags: []cli.Flag{
-			&cli.BoolFlag{Name: "verbose", Aliases: []string{"v"}, Usage: "Show logs verbosely"},
+			&cli.BoolFlag{
+				Name:    "verbose",
+				Aliases: []string{"v"},
+				Usage:   "Show logs verbosely",
+			},
 		},
 	}
 }
