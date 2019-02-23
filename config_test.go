@@ -94,10 +94,8 @@ func prepare(t *testing.T) (string, func()) {
 	userCurrent = func() (*user.User, error) {
 		return &user.User{HomeDir: tmpDir}, userCurrentErr
 	}
-	t.Logf("tmpDir: %s", tmpDir)
 	return tmpDir, func() {
 		userCurrent = original
-		t.Log("removing tmpDir...")
 		os.RemoveAll(tmpDir)
 	}
 }
