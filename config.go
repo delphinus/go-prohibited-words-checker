@@ -12,15 +12,18 @@ import (
 const filename = ".config/go-prohibited-words-checker/config.toml"
 
 // Config is a struct of the config. Subject has the mail subject template
-// that has %s as the placeholder.
+// that has %s as the placeholder. Ignores has regexp's to ignore files to
+// search.
 type Configs struct {
-	Words []string `toml:"words"`
-	Mail  struct {
-		To      []string `toml:"to"`
+	Dir     string   `toml:"dir"`
+	Ignores []string `toml:"ignores"`
+	Mail    struct {
 		From    string   `toml:"from"`
 		Subject string   `toml:"subject"`
 		Text    string   `toml:"text"`
+		To      []string `toml:"to"`
 	} `toml:"mail"`
+	Words []string `toml:"words"`
 }
 
 // Config is the loaded config. This is available after Before()

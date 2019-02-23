@@ -18,5 +18,6 @@ func NewApp() *cli.App {
 				Usage:   "Show logs verbosely",
 			},
 		},
+		Action: Action,
 	}
 }
