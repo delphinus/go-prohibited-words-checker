@@ -10,6 +10,7 @@ func NewApp() *cli.App {
 		Authors: []*cli.Author{
 			{Name: "JINNOUCHI Yasushi", Email: "delphinus@remora.cx"},
 		},
+		Before: LoadConfig,
 		Flags: []cli.Flag{
 			&cli.BoolFlag{Name: "verbose", Aliases: []string{"v"}, Usage: "Show logs verbosely"},
 		},

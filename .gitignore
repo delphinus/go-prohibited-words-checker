@@ -65,3 +65,5 @@ tags
 [._]*.un~
 
 
+### custom rules
+/go-prohibited-words-checker
