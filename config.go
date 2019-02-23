@@ -6,6 +6,7 @@ import (
 
 	"github.com/BurntSushi/toml"
 	"golang.org/x/xerrors"
+	"gopkg.in/go-playground/validator.v9"
 	"gopkg.in/urfave/cli.v2"
 )
 
@@ -15,15 +16,15 @@ const filename = ".config/go-prohibited-words-checker/config.toml"
 // that has %s as the placeholder. Ignores has regexp's to ignore files to
 // search.
 type Configs struct {
-	Dir     string   `toml:"dir"`
-	Ignores []string `toml:"ignores"`
+	Dir     string   `toml:"dir" validate:"required"`
+	Ignores []string `toml:"ignores" validate:"gt=0,dive,required"`
 	Mail    struct {
-		From    string   `toml:"from"`
-		Subject string   `toml:"subject"`
-		Text    string   `toml:"text"`
-		To      []string `toml:"to"`
-	} `toml:"mail"`
-	Words []string `toml:"words"`
+		From    string   `toml:"from" validate:"required"`
+		Subject string   `toml:"subject" validate:"required"`
+		Text    string   `toml:"text" validate:"required"`
+		To      []string `toml:"to" validate:"gt=0,dive,required"`
+	} `toml:"mail" validate:"required"`
+	Words []string `toml:"words" validate:"gt=0,dive,required"`
 }
 
 // Config is the loaded config. This is available after Before()
@@ -49,5 +50,16 @@ func LoadConfig(*cli.Context) error {
 	if _, err := toml.DecodeFile(file, Config); err != nil {
 		return xerrors.Errorf(": %w", err)
 	}
+	if err := isValidConfig(); err != nil {
+		return xerrors.Errorf(": %w", err)
+	}
 	return nil
+}
+
+func isValidConfig() (err error) {
+	validate := validator.New()
+	if err = validate.Struct(Config); err != nil {
+		return xerrors.Errorf(": %w", err)
+	}
+	return
 }
