@@ -42,7 +42,7 @@ func TestNoConfig(t *testing.T) {
 	_, done := prepare(t)
 	defer done()
 	err := LoadConfig(&cli.Context{})
-	t.Logf("found err: %+v", err)
+	t.Logf("found err: %s", err)
 	a.Error(err)
 }
 
@@ -54,7 +54,7 @@ func TestInValidConfig(t *testing.T) {
 invalid hogehoge
 `))
 	err := LoadConfig(&cli.Context{})
-	t.Logf("found err: %+v", err)
+	t.Logf("found err: %s", err)
 	a.Error(err)
 	a.Contains(err.Error(), "expected key separator")
 }
@@ -64,7 +64,7 @@ func TestValidConfig(t *testing.T) {
 	done := prepareValidConfig(t)
 	defer done()
 	err := LoadConfig(&cli.Context{})
-	t.Logf("found err: %+v", err)
+	t.Logf("found err: %s", err)
 	a.NoError(err)
 }
 

@@ -22,7 +22,7 @@ func TestNewWalk(t *testing.T) {
 			a.NoError(err)
 		} else {
 			a.Error(err)
-			t.Logf("err found: %s", err)
+			t.Logf("found err: %s", err)
 		}
 	}
 }
