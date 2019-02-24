@@ -1,12 +1,13 @@
 package main
 
 import (
+	"fmt"
 	"os/user"
 	"path"
 	"path/filepath"
 
 	"github.com/BurntSushi/toml"
-	"github.com/monochromegane/go-gitignore"
+	ignore "github.com/sabhiram/go-gitignore"
 	"golang.org/x/xerrors"
 	"gopkg.in/go-playground/validator.v9"
 	"gopkg.in/urfave/cli.v2"
@@ -30,8 +31,8 @@ type Configs struct {
 }
 
 // GitIgnore returns the matcher for .gitignore
-func (c *Configs) GitIgnore() (gitignore.IgnoreMatcher, error) {
-	matcher, err := gitignore.NewGitIgnore(filepath.Join(c.Dir, ".gitignore"))
+func (c *Configs) GitIgnore() (*ignore.GitIgnore, error) {
+	matcher, err := ignore.CompileIgnoreFile(filepath.Join(c.Dir, ".gitignore"))
 	if err != nil {
 		return nil, xerrors.Errorf(": %w", err)
 	}

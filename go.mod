@@ -5,7 +5,7 @@ require (
 	github.com/go-playground/locales v0.12.1 // indirect
 	github.com/go-playground/universal-translator v0.16.0 // indirect
 	github.com/leodido/go-urn v1.1.0 // indirect
-	github.com/monochromegane/go-gitignore v0.0.0-20160105113617-38717d0a108c
+	github.com/sabhiram/go-gitignore v0.0.0-20180611051255-d3107576ba94
 	github.com/stretchr/testify v1.3.0
 	golang.org/x/xerrors v0.0.0-20190212162355-a5947ffaace3
 	gopkg.in/go-playground/assert.v1 v1.2.1 // indirect

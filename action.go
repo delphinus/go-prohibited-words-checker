@@ -9,7 +9,7 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/monochromegane/go-gitignore"
+	ignore "github.com/sabhiram/go-gitignore"
 	"golang.org/x/xerrors"
 	"gopkg.in/urfave/cli.v2"
 )
@@ -30,7 +30,7 @@ func Action(cli *cli.Context) error {
 // Walker is a struct for walking dir
 type Walker struct {
 	found     []string
-	gitignore gitignore.IgnoreMatcher
+	gitignore *ignore.GitIgnore
 	ignore    *regexp.Regexp
 	scanned   int
 	skipped   int
@@ -58,17 +58,27 @@ func NewWalker() (w *Walker, err error) {
 }
 
 func (w *Walker) walk(path string, info os.FileInfo, err error) error {
+	if err != nil {
+		return xerrors.Errorf(": %w", err)
+	}
+	rel, err := filepath.Rel(Config.Dir, path)
+	if err != nil {
+		return xerrors.Errorf(": %w", err)
+	}
 	if info.IsDir() {
+		if w.gitignore.MatchesPath(rel) {
+			return filepath.SkipDir
+		}
 		return nil
 	}
-	w.scanned++
-	if w.ignore.MatchString(path) {
+	if w.gitignore.MatchesPath(rel) || w.ignore.MatchString(rel) {
+		w.scanned++
 		w.skipped++
 		return nil
 	}
 	content, err := ioutil.ReadFile(path)
 	if err != nil {
-		return xerrors.Errorf("reading from %s: %w", path, err)
+		return xerrors.Errorf("reading from %s: %w", rel, err)
 	}
 	contained := false
 	for _, word := range w.words {
