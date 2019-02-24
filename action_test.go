@@ -15,14 +15,15 @@ func TestNewWalk(t *testing.T) {
 		{re: []string{"invalid[re"}, ok: false},
 		{re: []string{"valid[re]"}, ok: true},
 	} {
-		done := prepareValidConfig(t)
-		defer done()
-		Config.Ignores = c.re
-		if _, err := NewWalker(); c.ok {
-			a.NoError(err)
-		} else {
-			a.Error(err)
-			t.Logf("found err: %s", err)
-		}
+		(func() {
+			defer prepareValidConfig(t)()
+			Config.Ignores = c.re
+			if _, err := NewWalker(); c.ok {
+				a.NoError(err)
+			} else {
+				a.Error(err)
+				t.Logf("found err: %s", err)
+			}
+		})()
 	}
 }
