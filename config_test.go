@@ -142,6 +142,7 @@ words = [
 [mail]
 from = 'hoge@example.com'
 to = ['fuga@example.com']
+password = 'secrets'
 subject = 'hoge fugao'
 text = 'hoge fugafuga'
 `))

@@ -21,10 +21,11 @@ type Configs struct {
 	Dir     string   `toml:"dir" validate:"required"`
 	Ignores []string `toml:"ignores" validate:"gt=0,dive,required"`
 	Mail    struct {
-		From    string   `toml:"from" validate:"required"`
-		Subject string   `toml:"subject" validate:"required"`
-		Text    string   `toml:"text" validate:"required"`
-		To      []string `toml:"to" validate:"gt=0,dive,required"`
+		From     string   `toml:"from" validate:"required"`
+		Password string   `toml:"password" validate:"required"`
+		Subject  string   `toml:"subject" validate:"required"`
+		Text     string   `toml:"text" validate:"required"`
+		To       []string `toml:"to" validate:"gt=0,dive,required"`
 	} `toml:"mail" validate:"required"`
 	Words []string `toml:"words" validate:"gt=0,dive,required"`
 }
