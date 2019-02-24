@@ -143,8 +143,6 @@ words = [
 from = 'hoge@example.com'
 to = ['fuga@example.com']
 password = 'secrets'
-subject = 'hoge fugao'
-text = 'hoge fugafuga'
 `))
 	a.NoError(
 		ioutil.WriteFile(filepath.Join(tmpDir, ".gitignore"), []byte(""), 0600),
