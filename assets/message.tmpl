@@ -1,0 +1,10 @@
+{{define "message"}}
+dotfiles scan for prohibited words
+  scanned: {{.scanned}} file(s)
+  skipped: {{.skipped}} file(s)
+  found:   {{.found}} file(s)
+
+{{range $found := .found}}
+  - $found
+{{end}}
+{end}}

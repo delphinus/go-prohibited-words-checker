@@ -1,0 +1,15 @@
+{{define "mail"}}
+<html>
+    <body>
+        <pre><code>dotfiles scan for prohibited words
+  scanned: {{.scanned}} file(s)
+  skipped: {{.skipped}} file(s)
+  found:   {{len .found}} file(s)
+
+{{range $found := .found}}
+  - $found
+{{end}}
+</code></pre>
+    </body>
+</html>
+{{end}}

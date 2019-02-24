@@ -109,3 +109,8 @@ func (w *Walker) walkFile(path string) error {
 	w.scanned++
 	return nil
 }
+
+// Data returns a map to use in templates
+func (w *Walker) Data() map[string]interface{} {
+	return map[string]interface{}{}
+}
