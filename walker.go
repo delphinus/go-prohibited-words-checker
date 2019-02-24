@@ -46,17 +46,26 @@ func (w *Walker) walk(path string, info os.FileInfo, err error) error {
 	if err != nil {
 		return xerrors.Errorf(": %w", err)
 	}
+	if info.IsDir() {
+		if err := w.walkDir(path); err != nil {
+			if err == filepath.SkipDir {
+				return err
+			}
+			return xerrors.Errorf(": %w", err)
+		}
+		return nil
+	}
+	if err := w.walkFile(path); err != nil {
+		return xerrors.Errorf(": %w", err)
+	}
+	return nil
+}
+
+func (w *Walker) walkDir(path string) error {
 	rel, err := filepath.Rel(Config.Dir, path)
 	if err != nil {
 		return xerrors.Errorf(": %w", err)
 	}
-	if info.IsDir() {
-		return w.walkDir(rel)
-	}
-	return w.walkFile(rel, path)
-}
-
-func (w *Walker) walkDir(rel string) error {
 	// sabhiram/go-gitignore cannot ignore directories without trailing
 	// slash for the .gitignore entries with tariling slashes. such as...
 	//
@@ -73,7 +82,11 @@ func (w *Walker) walkDir(rel string) error {
 	return nil
 }
 
-func (w *Walker) walkFile(rel string, path string) error {
+func (w *Walker) walkFile(path string) error {
+	rel, err := filepath.Rel(Config.Dir, path)
+	if err != nil {
+		return xerrors.Errorf(": %w", err)
+	}
 	if w.gitignore.MatchesPath(rel) || w.ignore.MatchString(rel) {
 		w.scanned++
 		w.skipped++

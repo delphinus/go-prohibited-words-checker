@@ -13,3 +13,10 @@ func Log(cli *cli.Context, format string, a ...interface{}) {
 		fmt.Fprintf(cli.App.Writer, format, a...)
 	}
 }
+
+// LogBytes log supplied []byte.
+func LogBytes(cli *cli.Context, body []byte) {
+	if cli.Bool("verbose") {
+		_, _ = cli.App.Writer.Write(body)
+	}
+}
