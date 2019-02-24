@@ -24,6 +24,7 @@ func Action(cli *cli.Context) error {
 // ResultHeader returns header string for the result
 func (w *Walker) ResultHeader() string {
 	return fmt.Sprintf(
-		"dotfiles scan for prohibited words; scanned: %d files(s), skipped: %d files(s), found: %d files(s)",
+		"dotfiles scan for prohibited words; scanned: %d files(s), "+
+			"skipped: %d files(s), found: %d files(s)",
 		w.scanned, w.skipped, len(w.found))
 }
