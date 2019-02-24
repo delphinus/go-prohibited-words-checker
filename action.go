@@ -26,10 +26,6 @@ func Action(c *cli.Context) error {
 		return xerrors.Errorf(": %w", err)
 	}
 	header := resultHeader(w)
-	LogBytes(c, header)
-	if !c.Bool("mail") {
-		return nil
-	}
 	subject, err := resultSubject(w)
 	if err != nil {
 		return xerrors.Errorf(": %w", err)
@@ -37,8 +33,11 @@ func Action(c *cli.Context) error {
 	body := bytes.NewBuffer(header)
 	_, _ = body.Write([]byte{'\n', '\n'})
 	resultBody(body, w)
-	if err := Mail(subject, body.Bytes()); err != nil {
-		return xerrors.Errorf(": %w", err)
+	LogBytes(c, body.Bytes())
+	if c.Bool("mail") {
+		if err := Mail(subject, body.Bytes()); err != nil {
+			return xerrors.Errorf(": %w", err)
+		}
 	}
 	return nil
 }
@@ -68,8 +67,8 @@ func resultHeader(w *Walker) []byte {
 func resultBody(wr io.Writer, w *Walker) {
 	for _, found := range w.found {
 		_, _ = wr.Write([]byte("  - "))
-		_, _ = wr.Write([]byte{'\n'})
 		_, _ = wr.Write([]byte(found))
+		_, _ = wr.Write([]byte{'\n'})
 	}
 }
 
