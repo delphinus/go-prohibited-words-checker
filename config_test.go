@@ -119,19 +119,24 @@ func prepareConfig(t *testing.T, tmpDir string, config []byte) {
 	a.NoError(ioutil.WriteFile(file, config, 0600))
 }
 
+func prepareGitIgnore(t *testing.T, tmpDir string) {
+	a := assert.New(t)
+	a.NoError(ioutil.WriteFile(filepath.Join(tmpDir, ".gitignore"), []byte(`.vim
+/node_modules/
+`), 0600))
+}
+
 func prepareValidConfig(t *testing.T) func() {
 	a := assert.New(t)
 	tmpDir, done := prepare(t)
 	prepareConfig(t, tmpDir, []byte(`
 dir = '`+tmpDir+`'
 ignores = [
-	'\A\.git',
-	'\A\.vim',
-	'node_modules',
+	'\Awant_to_ignore/',
 ]
 words = [
-	'hoge',
-	'fuga',
+	'HOGE',
+	'FUGA',
 ]
 
 [mail]
@@ -143,6 +148,7 @@ text = 'hoge fugafuga'
 	a.NoError(
 		ioutil.WriteFile(filepath.Join(tmpDir, ".gitignore"), []byte(""), 0600),
 	)
+	prepareGitIgnore(t, tmpDir)
 	a.NoError(LoadConfig(&cli.Context{}))
 	return done
 }
