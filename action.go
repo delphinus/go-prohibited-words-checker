@@ -26,6 +26,7 @@ func Action(cli *cli.Context) error {
 	return nil
 }
 
+// Walker is a struct for walking dir
 type Walker struct {
 	found   []string
 	ignore  *regexp.Regexp
@@ -36,7 +37,7 @@ type Walker struct {
 
 // NewWalker is a constructor of Walker
 func NewWalker() (w *Walker, err error) {
-	w.words = make([][]byte, len(Config.Words))
+	w = &Walker{words: make([][]byte, len(Config.Words))}
 	for i, word := range Config.Words {
 		w.words[i] = []byte(word)
 	}

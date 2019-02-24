@@ -61,26 +61,8 @@ invalid hogehoge
 
 func TestValidConfig(t *testing.T) {
 	a := assert.New(t)
-	tmpDir, done := prepare(t)
+	done := prepareValidConfig(t)
 	defer done()
-	prepareConfig(t, tmpDir, []byte(`
-dir = '/path/to/hoge'
-ignores = [
-	'\A\.git',
-	'\A\.vim',
-	'node_modules',
-]
-words = [
-	'hoge',
-	'fuga',
-]
-
-[mail]
-from = 'hoge@example.com'
-to = ['fuga@example.com']
-subject = 'hoge fugao'
-text = 'hoge fugafuga'
-`))
 	err := LoadConfig(&cli.Context{})
 	t.Logf("found err: %+v", err)
 	a.NoError(err)
@@ -108,4 +90,29 @@ func prepareConfig(t *testing.T, tmpDir string, config []byte) {
 		a.NoError(os.MkdirAll(dir, 0700))
 	}
 	a.NoError(ioutil.WriteFile(file, config, 0600))
+}
+
+func prepareValidConfig(t *testing.T) func() {
+	a := assert.New(t)
+	tmpDir, done := prepare(t)
+	prepareConfig(t, tmpDir, []byte(`
+dir = '/path/to/hoge'
+ignores = [
+	'\A\.git',
+	'\A\.vim',
+	'node_modules',
+]
+words = [
+	'hoge',
+	'fuga',
+]
+
+[mail]
+from = 'hoge@example.com'
+to = ['fuga@example.com']
+subject = 'hoge fugao'
+text = 'hoge fugafuga'
+`))
+	a.NoError(LoadConfig(&cli.Context{}))
+	return done
 }
