@@ -9,6 +9,7 @@ import (
 	"regexp"
 	"strings"
 
+	"github.com/monochromegane/go-gitignore"
 	"golang.org/x/xerrors"
 	"gopkg.in/urfave/cli.v2"
 )
@@ -28,16 +29,24 @@ func Action(cli *cli.Context) error {
 
 // Walker is a struct for walking dir
 type Walker struct {
-	found   []string
-	ignore  *regexp.Regexp
-	scanned int
-	skipped int
-	words   [][]byte
+	found     []string
+	gitignore gitignore.IgnoreMatcher
+	ignore    *regexp.Regexp
+	scanned   int
+	skipped   int
+	words     [][]byte
 }
 
 // NewWalker is a constructor of Walker
 func NewWalker() (w *Walker, err error) {
-	w = &Walker{words: make([][]byte, len(Config.Words))}
+	matcher, err := Config.GitIgnore()
+	if err != nil {
+		return nil, xerrors.Errorf(": %w", err)
+	}
+	w = &Walker{
+		gitignore: matcher,
+		words:     make([][]byte, len(Config.Words)),
+	}
 	for i, word := range Config.Words {
 		w.words[i] = []byte(word)
 	}

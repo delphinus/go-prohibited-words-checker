@@ -3,8 +3,10 @@ package main
 import (
 	"os/user"
 	"path"
+	"path/filepath"
 
 	"github.com/BurntSushi/toml"
+	"github.com/monochromegane/go-gitignore"
 	"golang.org/x/xerrors"
 	"gopkg.in/go-playground/validator.v9"
 	"gopkg.in/urfave/cli.v2"
@@ -25,6 +27,15 @@ type Configs struct {
 		To      []string `toml:"to" validate:"gt=0,dive,required"`
 	} `toml:"mail" validate:"required"`
 	Words []string `toml:"words" validate:"gt=0,dive,required"`
+}
+
+// GitIgnore returns the matcher for .gitignore
+func (c *Configs) GitIgnore() (gitignore.IgnoreMatcher, error) {
+	matcher, err := gitignore.NewGitIgnore(filepath.Join(c.Dir, ".gitignore"))
+	if err != nil {
+		return nil, xerrors.Errorf(": %w", err)
+	}
+	return matcher, nil
 }
 
 // Config is the loaded config. This is available after Before()

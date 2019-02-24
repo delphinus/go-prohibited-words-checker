@@ -12,6 +12,33 @@ import (
 	"gopkg.in/urfave/cli.v2"
 )
 
+func TestGitIgnore(t *testing.T) {
+	a := assert.New(t)
+	for _, c := range []struct {
+		hasGitignore bool
+		ok           bool
+	}{
+		{hasGitignore: true, ok: true},
+		{hasGitignore: false, ok: false},
+	} {
+		(func() {
+			tmpDir, done := prepare(t)
+			defer done()
+			if c.hasGitignore {
+				a.NoError(
+					ioutil.WriteFile(filepath.Join(tmpDir, ".gitignore"), []byte(""), 0600),
+				)
+			}
+			config := &Configs{Dir: tmpDir}
+			if _, err := config.GitIgnore(); c.ok {
+				a.NoError(err)
+			} else {
+				a.Error(err)
+			}
+		})()
+	}
+}
+
 var userCurrentErr error
 
 func TestConfigFilename(t *testing.T) {
@@ -96,7 +123,7 @@ func prepareValidConfig(t *testing.T) func() {
 	a := assert.New(t)
 	tmpDir, done := prepare(t)
 	prepareConfig(t, tmpDir, []byte(`
-dir = '/path/to/hoge'
+dir = '`+tmpDir+`'
 ignores = [
 	'\A\.git',
 	'\A\.vim',
@@ -113,6 +140,9 @@ to = ['fuga@example.com']
 subject = 'hoge fugao'
 text = 'hoge fugafuga'
 `))
+	a.NoError(
+		ioutil.WriteFile(filepath.Join(tmpDir, ".gitignore"), []byte(""), 0600),
+	)
 	a.NoError(LoadConfig(&cli.Context{}))
 	return done
 }
