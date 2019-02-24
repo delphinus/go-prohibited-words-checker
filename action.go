@@ -66,22 +66,29 @@ func (w *Walker) walk(path string, info os.FileInfo, err error) error {
 		return xerrors.Errorf(": %w", err)
 	}
 	if info.IsDir() {
-		// sabhiram/go-gitignore cannot ignore directories without
-		// trailing slash for the .gitignore entries with tariling
-		// slashes. such as...
-		//
-		//   in .gitignore:
-		//     /node_modules/
-		//   the directory:
-		//     node_modules
-		if !strings.HasSuffix(rel, "/") {
-			rel += "/"
-		}
-		if w.gitignore.MatchesPath(rel) {
-			return filepath.SkipDir
-		}
-		return nil
+		return w.walkDir(rel)
 	}
+	return w.walkFile(rel, path)
+}
+
+func (w *Walker) walkDir(rel string) error {
+	// sabhiram/go-gitignore cannot ignore directories without trailing
+	// slash for the .gitignore entries with tariling slashes. such as...
+	//
+	//   in .gitignore:
+	//     /node_modules/
+	//   the directory:
+	//     node_modules
+	if !strings.HasSuffix(rel, "/") {
+		rel += "/"
+	}
+	if w.gitignore.MatchesPath(rel) {
+		return filepath.SkipDir
+	}
+	return nil
+}
+
+func (w *Walker) walkFile(rel string, path string) error {
 	if w.gitignore.MatchesPath(rel) || w.ignore.MatchString(rel) {
 		w.scanned++
 		w.skipped++

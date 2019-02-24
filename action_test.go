@@ -59,7 +59,7 @@ func TestWalkWithError(t *testing.T) {
 	a.True(xerrors.Is(err, argErr))
 }
 
-func TestWalkWithDir(t *testing.T) {
+func TestWalkDir(t *testing.T) {
 	a := assert.New(t)
 	for _, c := range []struct {
 		path    string
@@ -93,7 +93,7 @@ func TestWalkWithDir(t *testing.T) {
 	}
 }
 
-func TestWalkSkip(t *testing.T) {
+func TestWalkFileSkipped(t *testing.T) {
 	a := assert.New(t)
 	for _, c := range []struct {
 		path    string
@@ -125,7 +125,7 @@ func TestWalkSkip(t *testing.T) {
 	}
 }
 
-func TestWalkMatchContent(t *testing.T) {
+func TestWalkFile(t *testing.T) {
 	a := assert.New(t)
 	for _, c := range []struct {
 		content string
